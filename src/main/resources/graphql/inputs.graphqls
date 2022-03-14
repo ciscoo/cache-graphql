@@ -1,0 +1,3 @@
+input TodoIdentifierInput {
+    id: String
+}
