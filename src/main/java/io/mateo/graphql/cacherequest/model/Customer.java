@@ -1,10 +1,10 @@
 package io.mateo.graphql.cacherequest.model;
 
-public class Todo {
+public class Customer {
 
     private int id;
 
-    private String title;
+    private CustomerInfo info;
 
     public int getId() {
         return id;
@@ -14,11 +14,11 @@ public class Todo {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public CustomerInfo getInfo() {
+        return info;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setInfo(CustomerInfo info) {
+        this.info = info;
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientsConfiguration {
 
     @Bean
-    public WebClient todosWebClient(WebClient.Builder webClientBuilder) {
+    public WebClient customerInfoWebClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder.baseUrl("https://jsonplaceholder.typicode.com").build();
     }
 

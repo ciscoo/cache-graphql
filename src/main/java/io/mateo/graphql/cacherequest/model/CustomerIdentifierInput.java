@@ -1,6 +1,6 @@
 package io.mateo.graphql.cacherequest.model;
 
-public class TodoIdentifierInput {
+public class CustomerIdentifierInput {
 
     private int id;
 

@@ -1,9 +1,26 @@
-type Todo {
+type CustomerInfo {
+    firstName: String!,
+    lastName: String!
+}
+
+type Customer {
     id: Int!,
-    title: String!,
-    completed: Boolean!,
+    info: CustomerInfo!,
+}
+
+type AltogetherCustomer {
+    id: Int!,
+    info: CustomerInfo!,
+}
+
+type IdealCustomer {
+    id: Int!,
+    firstName: String!,
+    lastName: String!
 }
 
 type Query {
-    todo(input: TodoIdentifierInput): Todo!
+    customer(input: CustomerIdentifierInput): Customer!
+    idealCustomer(input: CustomerIdentifierInput): IdealCustomer!
+    altogetherCustomer(input: CustomerIdentifierInput): AltogetherCustomer!
 }
