@@ -16,8 +16,9 @@ repositories {
 
 dependencies {
     implementation(platform(SpringBootPlugin.BOM_COORDINATES))
-    implementation("org.springframework.boot:spring-boot-starter-graphql")
+    implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:4.9.22"))
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.graphql:spring-graphql-test")

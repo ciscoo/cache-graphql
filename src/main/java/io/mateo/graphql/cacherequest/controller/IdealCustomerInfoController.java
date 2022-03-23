@@ -1,16 +1,15 @@
 package io.mateo.graphql.cacherequest.controller;
 
+import com.netflix.graphql.dgs.DgsComponent;
+import com.netflix.graphql.dgs.DgsData;
 import graphql.GraphQLContext;
-import io.mateo.graphql.cacherequest.model.Customer;
+import graphql.schema.DataFetchingEnvironment;
 import io.mateo.graphql.cacherequest.model.CustomerInfo;
 import io.mateo.graphql.cacherequest.model.IdealCustomer;
 import io.mateo.graphql.cacherequest.service.CustomerInfoService;
-import org.springframework.graphql.data.method.annotation.SchemaMapping;
-import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
-@SchemaMapping(typeName = "IdealCustomer")
-@Controller
+@DgsComponent
 public class IdealCustomerInfoController {
 
     private static final String RESPONSE_ATTR = IdealCustomerInfoController.class.getName() + ".todoResponse";
@@ -21,15 +20,25 @@ public class IdealCustomerInfoController {
         this.customerInfoService = customerInfoService;
     }
 
-    @SchemaMapping
-    public Mono<String> firstName(IdealCustomer customer, GraphQLContext graphQLContext) {
-        return getFromContextOrGet(customer, graphQLContext).map(CustomerInfo::getFirstName);
+    @DgsData.List(
+            value = {
+                    @DgsData(parentType = "IdealCustomer", field = "firstName"),
+                    @DgsData(parentType = "IdealCustomer", field = "lastName")
+            }
+    )
+    public Mono<String> resolveInfo(DataFetchingEnvironment environment) {
+        return getFromContextOrGet(environment.getSource(), environment.getGraphQlContext())
+                .map(info -> {
+                    if (environment.getField().getName().equals("firstName")) {
+                        return info.getFirstName();
+                    }
+                    if (environment.getField().getName().equals("lastName")) {
+                        return info.getLastName();
+                    }
+                    throw new UnsupportedOperationException("Unsupported field: " + environment.getField().getName());
+                });
     }
 
-    @SchemaMapping
-    public Mono<String> lastName(IdealCustomer customer, GraphQLContext graphQLContext) {
-        return getFromContextOrGet(customer, graphQLContext).map(CustomerInfo::getLastName);
-    }
 
     private Mono<CustomerInfo> getFromContextOrGet(IdealCustomer customer, GraphQLContext context) {
         Object cached = context.get(RESPONSE_ATTR);

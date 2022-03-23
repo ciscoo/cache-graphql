@@ -1,16 +1,16 @@
 package io.mateo.graphql.cacherequest.controller;
 
+import com.netflix.graphql.dgs.DgsComponent;
+import com.netflix.graphql.dgs.DgsQuery;
+import com.netflix.graphql.dgs.InputArgument;
 import io.mateo.graphql.cacherequest.model.AltogetherCustomer;
 import io.mateo.graphql.cacherequest.model.Customer;
 import io.mateo.graphql.cacherequest.model.CustomerIdentifierInput;
 import io.mateo.graphql.cacherequest.model.IdealCustomer;
 import io.mateo.graphql.cacherequest.service.CustomerInfoService;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
-@Controller
+@DgsComponent
 public class QueryController {
 
     private final CustomerInfoService customerInfoService;
@@ -19,22 +19,22 @@ public class QueryController {
         this.customerInfoService = customerInfoService;
     }
 
-    @QueryMapping
-    public Mono<Customer> customer(@Argument CustomerIdentifierInput input) {
+    @DgsQuery
+    public Mono<Customer> customer(@InputArgument CustomerIdentifierInput input) {
         var customer = new Customer();
         customer.setId(input.getId());
         return Mono.just(customer);
     }
 
-    @QueryMapping
-    public Mono<IdealCustomer> idealCustomer(@Argument CustomerIdentifierInput input) {
+    @DgsQuery
+    public Mono<IdealCustomer> idealCustomer(@InputArgument CustomerIdentifierInput input) {
         var customer = new IdealCustomer();
         customer.setId(input.getId());
         return Mono.just(customer);
     }
 
-    @QueryMapping
-    public Mono<AltogetherCustomer> altogetherCustomer(@Argument CustomerIdentifierInput input) {
+    @DgsQuery
+    public Mono<AltogetherCustomer> altogetherCustomer(@InputArgument CustomerIdentifierInput input) {
         return this.customerInfoService.getCustomerInfo(input.getId())
                 .map(info -> {
                     var customer = new AltogetherCustomer();
