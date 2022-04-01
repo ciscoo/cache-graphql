@@ -13,8 +13,6 @@ import reactor.core.publisher.Mono;
 @Controller
 public class IdealCustomerInfoController {
 
-    private static final String RESPONSE_ATTR = IdealCustomerInfoController.class.getName() + ".todoResponse";
-
     private final CustomerInfoService customerInfoService;
 
     public IdealCustomerInfoController(CustomerInfoService customerInfoService) {
@@ -32,7 +30,7 @@ public class IdealCustomerInfoController {
     }
 
     private Mono<CustomerInfo> getFromContextOrGet(IdealCustomer customer, GraphQLContext context) {
-        Object cached = context.get(RESPONSE_ATTR);
+        Object cached = context.get("customerInfo");
         if (cached != null) {
             return Mono.just((CustomerInfo) cached);
         }

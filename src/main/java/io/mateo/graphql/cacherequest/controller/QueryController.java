@@ -1,5 +1,8 @@
 package io.mateo.graphql.cacherequest.controller;
 
+import graphql.GraphQLContext;
+import graphql.schema.DataFetchingEnvironment;
+import graphql.schema.DataFetchingFieldSelectionSet;
 import io.mateo.graphql.cacherequest.model.AltogetherCustomer;
 import io.mateo.graphql.cacherequest.model.Customer;
 import io.mateo.graphql.cacherequest.model.CustomerIdentifierInput;
@@ -27,10 +30,18 @@ public class QueryController {
     }
 
     @QueryMapping
-    public Mono<IdealCustomer> idealCustomer(@Argument CustomerIdentifierInput input) {
+    public Mono<IdealCustomer> idealCustomer(@Argument CustomerIdentifierInput input, DataFetchingFieldSelectionSet selectionSet, GraphQLContext graphQLContext) {
         var customer = new IdealCustomer();
         customer.setId(input.getId());
-        return Mono.just(customer);
+        var mono = Mono.just(customer);
+        if (selectionSet.contains("firstName")) {
+            Mono<IdealCustomer> finalMono = mono;
+            mono = this.customerInfoService.getCustomerInfo(input.getId()).flatMap(info -> {
+                graphQLContext.put("customerInfo", info);
+                return finalMono;
+            });
+        }
+        return mono;
     }
 
     @QueryMapping
